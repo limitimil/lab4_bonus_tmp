@@ -1,11 +1,12 @@
-#include "opencv2/objdetect.hpp"
-#include "opencv2/videoio.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
+#include "opencv2/objdetect/objdetect.hpp"
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
 #include <iostream>
 #include <stdio.h>
 
+#include "hdmi_show.h"
 using namespace std;
 using namespace cv;
 
@@ -81,6 +82,6 @@ void detectAndDisplay( Mat frame )
         }
     }
     //-- Show what you got
-    imshow( window_name, frame );
+	hdmi_show(frame);
 	std::cout << "loop"<<std::endl;
 }
