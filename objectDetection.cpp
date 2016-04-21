@@ -1,17 +1,9 @@
-#include "opencv2/objdetect/objdetect.hpp"
-#include "opencv2/core/core.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-
-#include <iostream>
-#include <stdio.h>
-
-#include "hdmi_show.h"
+#include"objectDetection.h"
 using namespace std;
 using namespace cv;
 
 /** Function Headers */
-void detectAndDisplay( Mat frame );
+//void detectAndDisplay( Mat frame );
 
 /** Global variables */
 String face_cascade_name = "../haarcascade_frontalface_alt.xml";
@@ -24,15 +16,15 @@ const char* keys=
 	"{1| |lena.jpg|input image name}"
 };
 /** @function main */
-int main( int argc,const char** argv )
+void objectDetection( int argc,const char** argv )
 {
     Mat frame;
     CommandLineParser parser(argc, argv, keys);
     string filename = argv[1];
 
     //-- 1. Load the cascades
-    if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade\n"); return -1; };
-    if( !eyes_cascade.load( eyes_cascade_name ) ){ printf("--(!)Error loading eyes cascade\n"); return -1; };
+    if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade\n");  exit(421); };
+    if( !eyes_cascade.load( eyes_cascade_name ) ){ printf("--(!)Error loading eyes cascade\n");  exit(421); };
     //-- 2. read image
 	cout << filename <<endl;
 	frame = imread(filename, 1);
@@ -48,7 +40,6 @@ int main( int argc,const char** argv )
 
 	int c = waitKey(10);
 	if( (char)c == 27 ) { exit(419); } // escape
-    return 0;
 }
 
 /** @function detectAndDisplay */
