@@ -53,7 +53,7 @@ void hdmi_show(Mat& outputimage)
      // Map the device to memory
      fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED,
                         fbfd, 0);
-     if (int(fbp) == 0) {
+     if (long(fbp) == 0) {
          perror("Error: failed to map framebuffer device to memory");
          exit(4);
      }
@@ -69,9 +69,9 @@ void hdmi_show(Mat& outputimage)
                         (y+vinfo.yoffset) * finfo.line_length;
 
              if (vinfo.bits_per_pixel == 32) {
-                 *(fbp + location) = outputimage.at<Vec3i>(y,x)[0];        // Some blue
-                 *(fbp + location + 1) = outputimage.at<Vec3i>(y,x)[1];     // A little green
-                 *(fbp + location + 2) = outputimage.at<Vec3i>(y,x)[2];    // A lot of red
+                 *(fbp + location) = outputimage.at<Vec3b>(y,x)[0];        // Some blue
+                 *(fbp + location + 1) = outputimage.at<Vec3b>(y,x)[1];     // A little green
+                 *(fbp + location + 2) = outputimage.at<Vec3b>(y,x)[2];    // A lot of red
                  *(fbp + location + 3) = 0;      // No transparency
              } else  { //assume 16bpp
                  int b = 10;

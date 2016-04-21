@@ -19,35 +19,35 @@ String eyes_cascade_name = "../haarcascade_eye_tree_eyeglasses.xml";
 CascadeClassifier face_cascade;
 CascadeClassifier eyes_cascade;
 String window_name = "Capture - Face detection";
-
-/** @function main */
-int main( void )
+const char* keys=
 {
-    VideoCapture capture;
+	"{1| |lena.jpg|input image name}"
+};
+/** @function main */
+int main( int argc,const char** argv )
+{
     Mat frame;
+    CommandLineParser parser(argc, argv, keys);
+    string filename = argv[1];
 
     //-- 1. Load the cascades
     if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade\n"); return -1; };
     if( !eyes_cascade.load( eyes_cascade_name ) ){ printf("--(!)Error loading eyes cascade\n"); return -1; };
+    //-- 2. read image
+	cout << filename <<endl;
+	frame = imread(filename, 1);
 
-    //-- 2. Read the video stream
-    capture.open( -1 );
-    if ( ! capture.isOpened() ) { printf("--(!)Error opening video capture\n"); return -1; }
+	if( frame.empty() )
+	{
+	    printf(" --(!) No captured frame -- Break!");
+	    exit(419);
+	}
 
-    while ( capture.read(frame) )
-    {
-        if( frame.empty() )
-        {
-            printf(" --(!) No captured frame -- Break!");
-            break;
-        }
+	//-- 3. Apply the classifier to the frame
+	detectAndDisplay( frame );
 
-        //-- 3. Apply the classifier to the frame
-        detectAndDisplay( frame );
-
-        int c = waitKey(10);
-        if( (char)c == 27 ) { break; } // escape
-    }
+	int c = waitKey(10);
+	if( (char)c == 27 ) { exit(419); } // escape
     return 0;
 }
 
