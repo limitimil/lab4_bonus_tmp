@@ -13,7 +13,6 @@
 using namespace cv;
 using namespace std;
 
-Mat image, gray, edge, cedge;
 
 void hdmi_show(Mat& outputimage)
 {

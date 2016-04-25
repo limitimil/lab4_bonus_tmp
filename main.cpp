@@ -4,6 +4,7 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include "objectDetection.h"
+#include "edgeDetect.h"
 
 
 int fd;
@@ -42,50 +43,38 @@ void write_value(int addr,int input){
 }
 int main(int argc, const char **argv)
 {
-	printf("map success");
-	int value_sw = 0;
+	char value_sw = 0;
 	
 	unsigned page_addr, page_offset;
 	void *ptr;
-	unsigned page_size=sysconf(_SC_PAGESIZE);
+//	unsigned page_size=sysconf(_SC_PAGESIZE);
 
 
-	printf("map success");
 	//Read from switches using /dev/mem
 	
-	fd = open ("/dev/mem", O_RDWR);
-	if (fd < 1) {
-		perror(argv[0]);
-		return -1;
-	}
-	/* mmap the device into memory */
-	printf("map success");
-	page_addr = (0x41200000 & (~(page_size-1)));
-	printf("map success");
-	page_offset = 0x41200000 - page_addr;
-	printf("map success");
-	ptr = mmap(NULL, page_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, page_addr);
-	printf("map success");
-	/* Read value from the device register */
-	value_sw = *((unsigned *)(ptr + page_offset));
-	printf("Switch input: %08x\n",value_sw);
-	munmap(ptr, page_size);
 
 
-	printf("Switch input: %08x\n",get_value(0x41200000));
+		printf("out of loop\n");	
 	while(1){
-		value_sw = get_value(0x41200000);
+		fd = open ("/sys/class/gpio/gpio69/value", O_RDONLY);
+		if (fd < 1) {
+			perror(argv[0]);
+			return -1;
+		}
+		printf("in loop\n");	
+		read(fd,&value_sw,sizeof(char));
+		close(fd);
 		switch(value_sw){
-			case 0:
+			case '1':
 				objectDetection(argc, argv);
 				break;
 			default:
-				printf("Switch input: %08x\n",value_sw);
+				edgeDetection(argc, argv);
+				printf("Switch input: %c\n",value_sw);
 				break;
 		}
 	}
 
 
-	close(fd);
 	return 0;
 }
